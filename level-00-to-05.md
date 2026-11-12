@@ -2,96 +2,86 @@
 
 ## Level 0 → Level 1
 
-### Objective
-Connect to the remote Bandit server via SSH and retrieve the password for Level 1 stored inside the `readme` file.
+**Goal:** Find the password for Level 1 inside the `readme` file.
 
-### Commands Used
-* `ssh` — Connected securely to the remote OverTheWire server on port `2220`.
-* `ls` — Listed the files inside the home directory.
-* `cat` — Printed the contents of the `readme` file to the terminal.
+**Commands Used:**
+* `ssh` – Connected to the remote server.
+* `ls` – Listed the files in the folder.
+* `cat` – Read the text inside the file.
 
-### Step-by-Step Walkthrough
-1. Connected to Level 0 using `ssh bandit0@bandit.labs.overthewire.org -p 2220` and logged in with the password `bandit0`.
-2. Ran `ls` to view the directory contents and spotted a file named `readme`.
-3. Executed `cat readme` to read the file and retrieved the password for `bandit1` (`[REDACTED]`).
+**Steps:**
+1. Logged into `bandit0` over SSH on port `2220`.
+2. Typed `ls` and saw a file called `readme`.
+3. Typed `cat readme` to read the file and get the password for `bandit1` (`[REDACTED]`).
 
-### Key Takeaway
-* Standard Linux directories can be inspected immediately after login using `ls`, and plain-text files can be read directly in the terminal with `cat`.
+**What I Learned:** Use `ls` to see what is inside a folder and `cat` to read text files.
 
 ---
 
 ## Level 1 → Level 2
 
-### Objective
-Locate and read a file named `-` (a single dash) inside the home directory to retrieve the password for Level 2.
+**Goal:** Read a file named `-` (a single dash) to get the password for Level 2.
 
-### Commands Used
-* `ls` — Verified the file named `-` was present in the directory.
-* `cat < -` — Used standard input redirection to feed the contents of `-` directly into `cat`.
+**Commands Used:**
+* `ls` – Confirmed the `-` file was in the folder.
+* `cat < -` – Fed the `-` file directly into `cat`.
 
-### Step-by-Step Walkthrough
-1. Logged into `bandit1` via SSH using the password retrieved from Level 0.
-2. Recognized that running `cat -` directly fails because Linux interprets `-` as a command-line option for standard input rather than a file.
-3. Used standard input redirection (`cat < -`) to pass the file contents to `cat` and retrieved the password for `bandit2` (`[REDACTED]`).
+**Steps:**
+1. Logged into `bandit1` over SSH.
+2. Typing `cat -` failed because Linux treats `-` as a special option instead of a file name.
+3. Used `cat < -` to force the terminal to read the file and show the password for `bandit2` (`[REDACTED]`).
 
-### Key Takeaway
-* Special filenames starting with dashes cannot be passed directly as normal arguments; input redirection (`<`) or relative paths (`./-`) prevent the shell from treating them as flags.
+**What I Learned:** Files named with a dash cannot be opened normally. Using `<` (input redirection) or `./-` tells Linux to treat it as a real file.
 
 ---
 
 ## Level 2 → Level 3
 
-### Objective
-Read a file containing both leading dashes and spaces (`--spaces in this filename--`) to retrieve the password for Level 3.
+**Goal:** Read a file with spaces and dashes in its name (`--spaces in this filename--`).
 
-### Commands Used
-* `ls` — Identified the exact filename containing spaces and leading dashes.
-* `cat "./--spaces in this filename--"` / `cat ./--spaces\ in\ this\ filename--` — Used relative paths combined with quotes or backslash escaping to read the file.
+**Commands Used:**
+* `ls` – Found the exact file name.
+* `cat "./--spaces in this filename--"` – Used quotes and `./` to open the file safely.
 
-### Step-by-Step Walkthrough
-1. Logged into `bandit2` via SSH.
-2. Listed the directory contents and observed `--spaces in this filename--`.
-3. Prevented the Bash shell from splitting the filename at each space by using double quotes (`" "`) and backslash escaping (`\ `), along with `./` to handle the leading dashes, retrieving the password for `bandit3` (`[REDACTED]`).
+**Steps:**
+1. Logged into `bandit2` over SSH.
+2. Found the file `--spaces in this filename--`.
+3. Put `./` at the start to handle the dashes, and wrapped the name in quotes (`" "`) so the spaces did not split the command. Retrieved the password for `bandit3` (`[REDACTED]`).
 
-### Key Takeaway
-* The Linux shell splits arguments at spaces by default; wrapping paths in double quotes or escaping spaces with a backslash (`\`) forces the shell to treat the entire name as a single file.
+**What I Learned:** Linux splits commands wherever there is a space. Wrapping a file name in quotes or using backslashes (`\ `) keeps the whole name together.
 
 ---
 
 ## Level 3 → Level 4
 
-### Objective
-Locate and read a hidden file inside the `inhere` directory to retrieve the password for Level 4.
+**Goal:** Find and read a hidden file inside the `inhere` folder.
 
-### Commands Used
-* `cd inhere` — Changed into the `inhere` target directory.
-* `ls -a` — Listed all files in the directory, including hidden dotfiles.
-* `cat ...Hiding-From-You` — Displayed the contents of the hidden file.
+**Commands Used:**
+* `cd inhere` – Opened the `inhere` folder.
+* `ls -a` – Showed all files, including hidden ones.
+* `cat ...Hiding-From-You` – Read the hidden file.
 
-### Step-by-Step Walkthrough
-1. Logged into `bandit3` via SSH and navigated into the `inhere` directory using `cd inhere`.
-2. Ran `ls -a` to reveal hidden files starting with a dot and discovered `...Hiding-From-You`.
-3. Read the hidden file with `cat ...Hiding-From-You` and retrieved the password for `bandit4` (`[REDACTED]`).
+**Steps:**
+1. Logged into `bandit3` and moved into the `inhere` folder using `cd inhere`.
+2. Typed `ls -a` to reveal hidden files starting with a dot and spotted `...Hiding-From-You`.
+3. Typed `cat ...Hiding-From-You` to get the password for `bandit4` (`[REDACTED]`).
 
-### Key Takeaway
-* Files beginning with a period (`.`) are hidden from standard `ls` output; adding the `-a` flag reveals all hidden configuration and system files.
+**What I Learned:** Files starting with a dot (`.`) are hidden by default. Adding `-a` to `ls` reveals everything.
 
 ---
 
 ## Level 4 → Level 5
 
-### Objective
-Identify the single human-readable text file among multiple binary files inside the `inhere` directory to retrieve the password for Level 5.
+**Goal:** Find the only human-readable text file inside the `inhere` folder.
 
-### Commands Used
-* `cd inhere` — Navigated into the `inhere` directory.
-* `file ./*` — Inspected the file type of every item in the directory simultaneously.
-* `cat ./-file07` — Printed the contents of the identified ASCII text file.
+**Commands Used:**
+* `cd inhere` – Opened the `inhere` folder.
+* `file ./*` – Checked the file type of every file in the folder at once.
+* `cat ./-file07` – Read the text file.
 
-### Step-by-Step Walkthrough
-1. Logged into `bandit4` via SSH and moved into the `inhere` folder.
-2. Ran `file ./*` to safely check the data type of every dashed file without printing raw binary data to the terminal.
-3. Identified `-file07` as `ASCII text` and read it using `cat ./-file07` to retrieve the password for `bandit5` (`[REDACTED]`).
+**Steps:**
+1. Logged into `bandit4` and moved into the `inhere` folder.
+2. Ran `file ./*` to check every file without printing messy binary code to the screen.
+3. Saw that `-file07` was `ASCII text`, then ran `cat ./-file07` to get the password for `bandit5` (`[REDACTED]`).
 
-### Key Takeaway
-* The `file` utility inspects file headers to identify file types safely, and wildcard expansion with a relative path (`./*`) handles multiple dashed filenames at once.
+**What I Learned:** The `file` command safely tells you what kind of data is inside a file before you open it.
